@@ -13,7 +13,7 @@ add_executable(app src/main.cpp src/application.cpp src/application.h src/window
 target_include_directories(app PUBLIC glfw)
 
 if (WIN32)
-  target_link_libraries(app glfw opengl32})
+  target_link_libraries(app glfw opengl32)
 endif(WIN32)
 
 if (UNIX)
