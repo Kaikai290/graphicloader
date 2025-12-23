@@ -8,7 +8,15 @@ find_package(OpenGL REQUIRED)
 
 add_subdirectory(vendor/glfw) 
 
-add_executable(app src/main.cpp src/application.cpp src/application.h src/window.cpp src/window.h) 
+add_executable(app 
+  src/main.cpp 
+  src/application.cpp 
+  src/application.h 
+  src/window.cpp 
+  src/window.h
+  src/key.cpp
+  src/key.h
+) 
 
 target_include_directories(app PUBLIC glfw)
 

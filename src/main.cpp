@@ -1,27 +1,13 @@
 #include <GLFW/glfw3.h>
+
+#include "applayer.h"
 #include "application.h"
 #include "window.h"
 
-
-
 int main(void) {
-  WindowSpec spec;
+  ApplicationSpec spec;
   Application app(spec);
+  AppLayer layer1;
+  app.pushLayer(&layer1);
   app.run();
 }
-  /*Window window;
-  window.init(spec);
-
-  while (!glfwWindowShouldClose(window.window
-                                )) {
-    glClear(GL_COLOR_BUFFER_BIT);
-
-    glfwSwapBuffers(window.window);
-
-    glfwPollEvents();
-  }
-
-  glfwTerminate();
-  return 0;
-}
-*/

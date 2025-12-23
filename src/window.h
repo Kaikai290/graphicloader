@@ -2,25 +2,21 @@
 #define WINDOW_H
 
 #include <GLFW/glfw3.h>
+#include <cstdint>
 #include <string>
 
-struct WindowSpec {
-  int width = 900;
-  int height = 600;
-  std::string title = "default app";
-
-
-};
+struct ApplicationSpec;
 
 class Window {
 private:
   GLFWwindow *window;
-
+  double deltaTime = 0.0f;
+  double lastTime = 0.0f;
 public:
   Window();
   ~Window();
 
-  void init(WindowSpec spec);
+  void init(ApplicationSpec spec);
   void update();
   bool shouldClose();
 
