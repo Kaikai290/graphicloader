@@ -5,8 +5,8 @@ class Layer {
 public:
  ~Layer() = default;
 
-  virtual void update() {}
-  virtual void render() {}
+  virtual void update() {};
+  virtual void render() {};
 
 };
 

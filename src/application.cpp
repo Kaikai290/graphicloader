@@ -1,3 +1,4 @@
+#include <glad/glad.h>
 #include <GLFW/glfw3.h>
 
 #include <iostream>
@@ -11,6 +12,7 @@ Application::Application(ApplicationSpec spec)
   : spec(spec) {
   if (glfwInit())
     std::cout << "Initalize GLFW" << std::endl;
+  
   app = this;
   window.init(spec);
 }

@@ -1,4 +1,4 @@
-#include <GL/gl.h>
+#include <glad/glad.h>
 #include <GLFW/glfw3.h>
 
 #include <iostream>
@@ -38,6 +38,9 @@ void Window::init(const ApplicationSpec spec) {
     std::cout << "Failed to initalize Window" << std::endl;
   }
   glfwMakeContextCurrent(window);
+  
+  if(!gladLoadGLLoader((GLADloadproc) glfwGetProcAddress))
+    std::cout << "no" << std::endl;
 
   GLFW_REFRESH_RATE;
 
