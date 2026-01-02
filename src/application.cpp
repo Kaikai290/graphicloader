@@ -5,6 +5,7 @@
 #include <vector>
 
 #include "application.h"
+#include "log.h"
 
 void errorCallback(int code, const char* description);
 
@@ -13,15 +14,19 @@ static Application* app = nullptr;
 Application::Application(ApplicationSpec spec) 
   : spec(spec) {
   if (glfwInit())
-    std::cout << "Initalize GLFW" << std::endl;
+    Log::printInfo("Initalize GLFW");
   glfwSetErrorCallback(errorCallback);
   app = this;
   window = new Window();
+  if(window) {
+    Log::printInfo("Window Created");
+  }
   window->init(spec);
 }
 
 Application::~Application() {
   delete window;
+  Log::printInfo("Window Deleted");
   glfwTerminate();
 }
 

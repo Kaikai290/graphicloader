@@ -4,12 +4,17 @@ set(CMAKE_CXX_FLAGS_DEBUG_INIT "-Wall")
 
 project(graphicloader VERSION 0.1 LANGUAGES C CXX)
 
+set (CMAKE_CXX_STANDARD 20)
+
 find_package(OpenGL REQUIRED) 
 
 include_directories( ${CMAKE_SOURCE_DIR}/vendor/glad/include)
+include_directories( ${CMAKE_SOURCE_DIR}/vendor/glm/glm)
 
 add_library(glad STATIC ${CMAKE_SOURCE_DIR}/vendor/glad/glad.c)
+
 add_subdirectory(vendor/glfw) 
+add_subdirectory(vendor/glm) 
 
 add_executable(app 
   src/main.cpp 
@@ -17,6 +22,8 @@ add_executable(app
   src/application.h 
   src/window.cpp 
   src/window.h
+  src/log.cpp
+  src/log.h
   src/key.cpp
   src/key.h
 
@@ -30,14 +37,14 @@ add_executable(app
   src/renderer/ibo.h
 ) 
 
-target_include_directories(app PUBLIC glfw glad)
+target_include_directories(app PUBLIC glfw glad glm)
 
 if (WIN32)
-  target_link_libraries(app glad glfw opengl32)
+  target_link_libraries(app glad glfw opengl32 glm)
 endif(WIN32)
 
 if (UNIX)
-  target_link_libraries(app glad glfw GL)
+  target_link_libraries(app glad glfw GL glm)
 endif (UNIX)
 
 

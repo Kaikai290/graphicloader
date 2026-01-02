@@ -3,6 +3,10 @@
 #include <glad/glad.h>
 #include <GLFW/glfw3.h>
 
+#include <glm/glm.hpp>
+#include <glm/gtc/matrix_transform.hpp>
+#include <glm/gtc/type_ptr.hpp>
+
 #include "application.h"
 #include "layer.h"
 
@@ -33,7 +37,6 @@ public:
   }
 
   virtual void update() override {
-
     glClearColor(0.2f, 0.7f, 0.4f, 1.0f);
 
     auto &keys = Application::getApplication().getKeyStates();
