@@ -1,3 +1,7 @@
+#
+objloader/
+
+# CMAKE IGNORE
 CMakeLists.txt.user
 CMakeCache.txt
 CMakeFiles

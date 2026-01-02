@@ -22,7 +22,7 @@ struct ApplicationSpec {
 class Application {
 private:
   ApplicationSpec spec;
-  Window window;
+  Window *window;
 
   Key keys;
 

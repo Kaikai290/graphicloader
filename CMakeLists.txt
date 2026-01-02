@@ -17,11 +17,17 @@ add_executable(app
   src/application.h 
   src/window.cpp 
   src/window.h
-  src/shader_manager.cpp
-  src/shader_manager.h
   src/key.cpp
   src/key.h
 
+  src/renderer/shader_manager.cpp
+  src/renderer/shader_manager.h
+  src/renderer/vao.cpp
+  src/renderer/vao.h
+  src/renderer/vbo.cpp
+  src/renderer/vbo.h
+  src/renderer/ibo.cpp
+  src/renderer/ibo.h
 ) 
 
 target_include_directories(app PUBLIC glfw glad)

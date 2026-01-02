@@ -8,7 +8,8 @@
 int main(void) {
   ApplicationSpec spec;
   Application app(spec);
-  AppLayer layer1;
-  app.pushLayer(&layer1);
+  AppLayer *layer1 = new AppLayer();
+  app.pushLayer(layer1);
   app.run();
+  delete layer1;
 }

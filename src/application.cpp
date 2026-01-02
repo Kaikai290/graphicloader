@@ -6,18 +6,22 @@
 
 #include "application.h"
 
+void errorCallback(int code, const char* description);
+
 static Application* app = nullptr;
 
 Application::Application(ApplicationSpec spec) 
   : spec(spec) {
   if (glfwInit())
     std::cout << "Initalize GLFW" << std::endl;
-  
+  glfwSetErrorCallback(errorCallback);
   app = this;
-  window.init(spec);
+  window = new Window();
+  window->init(spec);
 }
 
 Application::~Application() {
+  delete window;
   glfwTerminate();
 }
 
@@ -29,7 +33,8 @@ void Application::run() {
   running = true;
 
   while(running) {
-    running = window.shouldClose();
+    running = window->shouldClose();
+    window->clear();
 
     for(auto layer: layers){
       layer->update();
@@ -39,7 +44,7 @@ void Application::run() {
       layer->render();
     }
 
-    window.update();
+    window->update();
   }
 }
 

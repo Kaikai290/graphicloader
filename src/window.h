@@ -18,6 +18,7 @@ public:
 
   void init(ApplicationSpec spec);
   void update();
+  void clear();
   bool shouldClose();
 
   const GLFWwindow* getWindow() const;

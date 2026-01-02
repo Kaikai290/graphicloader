@@ -29,7 +29,7 @@ void Window::init(const ApplicationSpec spec) {
   glfwWindowHint(GLFW_RESIZABLE, spec.resizable);
   glfwWindowHint(GLFW_FOCUSED, spec.windowFocused);
   glfwWindowHint(GLFW_CENTER_CURSOR, spec.centerCusor);
-  //glfwWindowHint(GLFW_OPENGL_DEBUG_CONTEXT, GLFW_FALSE);
+  // glfwWindowHint(GLFW_OPENGL_DEBUG_CONTEXT, GLFW_FALSE);
 
   window =
       glfwCreateWindow(spec.width, spec.height, spec.title.c_str(), NULL, NULL);
@@ -38,8 +38,8 @@ void Window::init(const ApplicationSpec spec) {
     std::cout << "Failed to initalize Window" << std::endl;
   }
   glfwMakeContextCurrent(window);
-  
-  if(!gladLoadGLLoader((GLADloadproc) glfwGetProcAddress))
+
+  if (!gladLoadGLLoader((GLADloadproc)glfwGetProcAddress))
     std::cout << "no" << std::endl;
 
   GLFW_REFRESH_RATE;
@@ -66,8 +66,6 @@ void Window::init(const ApplicationSpec spec) {
 }
 
 void Window::update() {
-  glClear(GL_COLOR_BUFFER_BIT);
-
   glfwSwapBuffers(window);
 
   glfwPollEvents();
@@ -77,11 +75,20 @@ void Window::update() {
   lastTime = currentTime;
 }
 
+void Window::clear() {
+  glClear(GL_COLOR_BUFFER_BIT);
+}
+
 bool Window::shouldClose() { return !glfwWindowShouldClose(window); }
 
 const GLFWwindow *Window::getWindow() const { return window; }
 
-void keyCallback(GLFWwindow *window, int key, int scancode, int action, int mods) {
+void errorCallback(int code, const char *description) {
+  std::cout << description << std::endl;
+}
+
+void keyCallback(GLFWwindow *window, int key, int scancode, int action,
+                 int mods) {
   Application::getApplication().getKeys().updateState(key, action);
 }
 
