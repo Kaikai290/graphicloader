@@ -7,7 +7,7 @@
 IBO::IBO(const unsigned int *data, unsigned int count) {
   glGenBuffers(1, &iboID);
   glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, iboID);
-  glBufferData(GL_ELEMENT_ARRAY_BUFFER, 3 * sizeof(unsigned int), data, GL_STATIC_DRAW);
+  glBufferData(GL_ELEMENT_ARRAY_BUFFER, count * sizeof(unsigned int), data, GL_STATIC_DRAW);
 }
 
 

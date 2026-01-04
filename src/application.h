@@ -4,13 +4,26 @@
 #include <GLFW/glfw3.h>
 #include <vector>
 
-#include "layer.h"
 #include "window.h"
+#include "layer.h"
+
+#include "camera.h"
 #include "key.h"
 
-struct ApplicationSpec {
+struct ScreenDim {
   int width = 900;
   int height = 600;
+  float resolution = (float)width/(float)height; 
+
+  void setDimension(int x, int y) {
+    width = x;
+    height = y;
+    resolution = (float)width/(float)height; 
+  }
+};
+
+struct ApplicationSpec {
+  ScreenDim dimensions;
   std::string title = "default app";
   bool mouseLock = false;
   bool rawMouseMoition = false;
@@ -23,6 +36,7 @@ class Application {
 private:
   ApplicationSpec spec;
   Window *window;
+  Camera *mainCamera;
 
   Key keys;
 
@@ -35,6 +49,10 @@ public:
   ~Application();
 
   static Application& getApplication();
+
+   ScreenDim& getDimensions();
+
+  Camera& getMainCamera();
 
   void run();
   void stop();

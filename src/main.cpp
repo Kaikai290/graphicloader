@@ -8,7 +8,7 @@
 int main(void) {
   ApplicationSpec spec;
   Application app(spec);
-  AppLayer *layer1 = new AppLayer();
+  AppLayer *layer1 = new AppLayer(app.getMainCamera());
   app.pushLayer(layer1);
   app.run();
   delete layer1;

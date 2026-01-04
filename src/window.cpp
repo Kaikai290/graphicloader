@@ -32,7 +32,8 @@ void Window::init(const ApplicationSpec spec) {
   // glfwWindowHint(GLFW_OPENGL_DEBUG_CONTEXT, GLFW_FALSE);
 
   window =
-      glfwCreateWindow(spec.width, spec.height, spec.title.c_str(), NULL, NULL);
+      glfwCreateWindow(spec.dimensions.width, spec.dimensions.height,
+                       spec.title.c_str(), NULL, NULL);
   if (!window) {
     glfwTerminate();
     std::cout << "Failed to initalize Window" << std::endl;
@@ -100,5 +101,9 @@ void mouseButtonCallback(GLFWwindow *window, int button, int action, int mods) {
 void scrollCallback(GLFWwindow *window, double xoffset, double yoffset) {}
 
 void windowSizeCallback(GLFWwindow *window, int width, int height) {
-  glfwGetWindowSize(window, &width, &height);
+  glViewport(0, 0, width, height);
+  ScreenDim& screen = Application::getApplication().getDimensions();
+  screen.width = width;
+  screen.height = height;
+  Application::getApplication().getMainCamera().setDimension(width, height); 
 }

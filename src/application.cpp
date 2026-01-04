@@ -5,6 +5,7 @@
 #include <vector>
 
 #include "application.h"
+#include "camera.h"
 #include "log.h"
 
 void errorCallback(int code, const char* description);
@@ -22,17 +23,32 @@ Application::Application(ApplicationSpec spec)
     Log::printInfo("Window Created");
   }
   window->init(spec);
+  mainCamera = new Camera(spec.dimensions.width, spec.dimensions.height);
+  if(mainCamera) {
+    Log::printInfo("Main Camera Created");
+  }
 }
 
 Application::~Application() {
   delete window;
   Log::printInfo("Window Deleted");
+  delete mainCamera;
+  Log::printInfo("Main Camera Deleted");
   glfwTerminate();
 }
 
 Application& Application::getApplication() {
   return *app;
 }
+
+ScreenDim& Application::getDimensions() {
+  return spec.dimensions;
+}
+
+Camera& Application::getMainCamera(){
+  return *mainCamera;
+}
+
 
 void Application::run() {
   running = true;

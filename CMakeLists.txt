@@ -24,6 +24,8 @@ add_executable(app
   src/window.h
   src/log.cpp
   src/log.h
+  src/camera.cpp
+  src/camera.h
   src/key.cpp
   src/key.h
 
