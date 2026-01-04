@@ -5,6 +5,11 @@
 
 #include "application.h"
 #include "window.h"
+  
+static double lastX;
+static double lastY;
+
+static bool firstMove = true;
 
 void keyCallback(GLFWwindow *window, int key, int scancode, int action,
                  int mods);
@@ -93,7 +98,43 @@ void keyCallback(GLFWwindow *window, int key, int scancode, int action,
   Application::getApplication().getKeys().updateState(key, action);
 }
 
-void cursorPosCallback(GLFWwindow *window, double xpos, double ypos) {}
+void cursorPosCallback(GLFWwindow *window, double xpos, double ypos) {
+if (firstMove)
+    {
+        lastX = xpos;
+        lastY = ypos;
+        firstMove = false;
+    }
+  
+    double xoffset = xpos - lastX;
+    double yoffset = lastY - ypos; 
+    lastX = xpos;
+    lastY = ypos;
+
+    float sensitivity = 0.1f;
+    xoffset *= sensitivity;
+    yoffset *= sensitivity;
+
+    Camera& cam = Application::getApplication().getMainCamera();
+    float& yaw = cam.getYaw();
+    float& pitch = cam.getPitch();
+
+    yaw   += xoffset;
+    pitch += yoffset;
+
+    if(pitch > 89.0f)
+        pitch = 89.0f;
+    if(pitch < -89.0f)
+        pitch = -89.0f;
+
+    glm::vec3 direction;
+    direction.x = cos(glm::radians(yaw)) * cos(glm::radians(pitch));
+    direction.y = sin(glm::radians(pitch));
+    direction.z = sin(glm::radians(yaw)) * cos(glm::radians(pitch));
+    cam.getFront() = glm::normalize(direction);
+    
+    cam.update();
+}
 
 void mouseButtonCallback(GLFWwindow *window, int button, int action, int mods) {
 }

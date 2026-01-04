@@ -38,6 +38,9 @@ private:
   Window *window;
   Camera *mainCamera;
 
+  float deltaTime = 0.0f;
+  float prevTime;
+
   Key keys;
 
   std::vector<Layer *> layers;
@@ -50,12 +53,13 @@ public:
 
   static Application& getApplication();
 
-   ScreenDim& getDimensions();
-
+  ScreenDim& getDimensions();
+  
   Camera& getMainCamera();
 
   void run();
   void stop();
+  void calculateTime();
 
   void pushLayer(Layer *layer);
 

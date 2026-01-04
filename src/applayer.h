@@ -41,6 +41,9 @@ unsigned int indices[] = {
  2, 6, 3,
  7, 4, 3
 };
+
+float moveSpeed = 10.0f;
+
 class AppLayer : public Layer {
 public:
   class VAO *vao;
@@ -57,29 +60,67 @@ public:
     delete vao;
   }
 
-  virtual void update() override {
-    glm::mat4 model = glm::mat4(1.0f);
-    model = glm::rotate(model, glm::radians(-55.0f), glm::vec3(1.0f, 0.0f, 0.0f));
-    glm::mat4 view = glm::mat4(1.0f);
-    // note that we're translating the scene in the reverse direction of where we want to move
-    view = glm::translate(view, glm::vec3(0.0f, 0.0f, -3.0f));
-    
-
-
-    glClearColor(0.2f, 0.7f, 0.4f, 1.0f);
-
+  void processInput(float deltaTime) {
     auto &keys = Application::getApplication().getKeyStates();
+
     for (unsigned int i = 0; i != 1024; i++) {
       switch (i){
       case GLFW_KEY_ESCAPE:
         if(keys[i] == PRESSED)
           Application::getApplication().stop();
         break;
+      case GLFW_KEY_A:
+        if(keys[i] == PRESSED) {
+          float x = deltaTime * -moveSpeed;
+          camera->moveRight(x);
+        }
+        break;
+      case GLFW_KEY_D:
+        if(keys[i] == PRESSED) {
+          float x = deltaTime * moveSpeed;
+          camera->moveRight(x);
+        }
+        break;
+      case GLFW_KEY_W:
+        if(keys[i] == PRESSED) {
+          float z = deltaTime * moveSpeed;
+          camera->moveForward(z);
+        }
+        break;
+      case GLFW_KEY_S:
+        if(keys[i] == PRESSED) {
+          float z = deltaTime * -moveSpeed;
+          camera->moveForward(z);
+        }
+        break;
+      case GLFW_KEY_SPACE:
+        if(keys[i] == PRESSED) {
+          float y = deltaTime * moveSpeed;
+          camera->moveUp(y);
+        }
+        break;
+      case GLFW_KEY_LEFT_SHIFT:
+        if(keys[i] == PRESSED) {
+          float y = deltaTime * -moveSpeed;
+          camera->moveUp(y);
+        }
       default:
           if(keys[i] == PRESSED)
             glClearColor(0.8f, 0.8f, 0.4f, 1.0f);
       };
     }
+    camera->update();
+  }
+
+  virtual void update(float deltaTime) override {
+    Log::printInfo(1/deltaTime);
+    glm::mat4 model = glm::mat4(1.0f);
+    model = glm::rotate(model, glm::radians(-55.0f), glm::vec3(1.0f, 0.0f, 0.0f));
+
+    glClearColor(0.2f, 0.7f, 0.4f, 1.0f);
+    processInput(deltaTime);
+    glm::mat4 view = camera->getView(); 
+
     shader.useShader();
     
     shader.setMat4("model", model);

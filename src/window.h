@@ -10,6 +10,8 @@ struct ApplicationSpec;
 class Window {
 private:
   GLFWwindow *window;
+
+
   double deltaTime = 0.0f;
   double lastTime = 0.0f;
 public:

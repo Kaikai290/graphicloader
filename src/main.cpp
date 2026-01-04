@@ -7,6 +7,7 @@
 
 int main(void) {
   ApplicationSpec spec;
+  spec.mouseLock = true;
   Application app(spec);
   AppLayer *layer1 = new AppLayer(app.getMainCamera());
   app.pushLayer(layer1);

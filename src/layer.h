@@ -5,7 +5,7 @@ class Layer {
 public:
  virtual ~Layer() = default;
 
-  virtual void update() {};
+  virtual void update(float deltaTime) {};
   virtual void render() {};
 
 };
