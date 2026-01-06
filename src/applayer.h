@@ -13,48 +13,66 @@
 
 #include "renderer/shader_manager.h"
 #include "renderer/vao.h"
+#include "renderer/texture_manager.h"
 
 #include "log.h"
 
 float vertices[] = {
- 0.5, -0.5, -0.5,
- 0.5, -0.5,  0.5,
--0.5, -0.5,  0.5,
--0.5, -0.5, -0.5,
- 0.5,  0.5, -0.5,
- 0.5,  0.5,  0.5,
--0.5,  0.5,  0.5,
--0.5,  0.5, -0.5
+  0.5, -0.5,  0.5, 0.0, 0.0,//21
+ -0.5, -0.5,  0.5, 1.0, 0.0,//32
+ -0.5, -0.5, -0.5, 1.0, 1.0,//43
+  0.5,  0.5, -0.5, 1.0, 1.0,//53
+ -0.5,  0.5, -0.5, 0.0, 1.0,//84
+ -0.5,  0.5,  0.5, 0.0, 0.0,//71
+  0.5,  0.5,  0.5, 0.0, 1.0,//64
+  0.5, -0.5,  0.5, 1.0, 0.0,//22
+  0.5,  0.5,  0.5, 1.0, 1.0,//63
+ -0.5,  0.5,  0.5, 0.0, 1.0,//74
+ -0.5,  0.5,  0.5, 1.0, 1.0,//73
+ -0.5, -0.5, -0.5, 0.0, 0.0,//41
+  0.5,  0.5, -0.5, 0.0, 1.0,//54
+  0.5, -0.5, -0.5, 0.0, 0.0,//11
+ -0.5, -0.5, -0.5, 1.0, 0.0,//42
+  0.5, -0.5, -0.5, 0.0, 1.0,//14
+  0.5,  0.5,  0.5, 1.0, 0.0,//62
+  0.5, -0.5, -0.5, 1.0, 0.0,//12
+ -0.5, -0.5,  0.5, 0.0, 0.0,//31
+ -0.5, -0.5,  0.5, 1.0, 0.0,//32
+ -0.5,  0.5, -0.5, 1.0, 1.0//83
+  
+  
 };
 
 unsigned int indices[] = {
- 1, 2, 3,
- 4, 7, 6,
- 4, 5, 1,
- 1, 5, 6,
- 6, 7, 3,
- 4, 0, 3,
- 0, 1, 3,
- 5, 4, 6,
- 0, 4, 1,
- 2, 1, 6,
- 2, 6, 3,
- 7, 4, 3
+  0, 1, 2, //21, 32, 43,
+  3, 4, 5,//53 84 71
+  3, 6, 0,//53 64 21
+  7, 8, 9,//22 63 74
+  10, 4, 11,//73 84 41
+  12, 13, 14, //54 11 42
+  15, 0, 2,//14 21 43
+  16, 3, 5,//62 53 71
+  17, 3, 0,//12 53 21
+  18, 7, 9,//31 22 74
+  19, 10, 11,//32 73 41
+  20, 12, 14//83 54 42
 };
 
 float moveSpeed = 10.0f;
 
 class AppLayer : public Layer {
 public:
+  bool firstPro = true;
   class VAO *vao;
   ShaderManager shader =
-      ShaderManager("../../res/shader.vs", "../../res/shader.fs");
+      ShaderManager("../../res/shaderTex.vs", "../../res/shaderTex.fs");
   Camera *camera;
+  TextureManager texture = TextureManager("../../res/container.jpg");
+
 
   AppLayer(Camera& mainCamera)
     : camera(&mainCamera) { 
     vao = new VAO(&vertices, sizeof(vertices), indices, 36);
-
   };
   ~AppLayer() {
     delete vao;
@@ -113,19 +131,24 @@ public:
   }
 
   virtual void update(float deltaTime) override {
-    Log::printInfo(1/deltaTime);
-    glm::mat4 model = glm::mat4(1.0f);
-    model = glm::rotate(model, glm::radians(-55.0f), glm::vec3(1.0f, 0.0f, 0.0f));
+    //Log::printInfo(1/deltaTime);
 
     glClearColor(0.2f, 0.7f, 0.4f, 1.0f);
     processInput(deltaTime);
     glm::mat4 view = camera->getView(); 
 
     shader.useShader();
+
+    shader.setInt("texture0", 0);
     
-    shader.setMat4("model", model);
     shader.setMat4("view", view);
-    shader.setMat4("projection", camera->getProjection());
+    if(firstPro)  {
+      glm::mat4 model = glm::mat4(1.0f);
+      model = glm::rotate(model, glm::radians(0.0f), glm::vec3(1.0f, 0.0f, 0.0f));
+      shader.setMat4("model", model);
+      shader.setMat4("projection", camera->getProjection()); // needs to update if resized
+      firstPro = false;
+    }
 
     vao->bind();
     glDrawElements(GL_TRIANGLES, 36, GL_UNSIGNED_INT, 0);

@@ -1,8 +1,5 @@
 #include "camera.h"
 
-#include "log.h"
-#include <glm/ext/matrix_transform.hpp>
-
 Camera::Camera(int width, int height)
   :screenWidth(width), screenHeight(height){
   aspectRatio = (float)width/(float)height;

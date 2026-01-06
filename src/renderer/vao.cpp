@@ -30,8 +30,10 @@ VAO::VAO(const void *verticesData, unsigned int size, const unsigned int *indice
   vboID = new VBO(verticesData, size);
   iboID = new IBO(indicesData, count);
 
-  glVertexAttribPointer(0, 3, GL_FLOAT, GL_FALSE, 3*sizeof(float), (void *)0);
+  glVertexAttribPointer(0, 3, GL_FLOAT, GL_FALSE, 5*sizeof(float), (void *)0);
   glEnableVertexAttribArray(0);
+  glVertexAttribPointer(1, 2, GL_FLOAT, GL_FALSE, 5*sizeof(float), (void *)(3*sizeof(float)));
+  glEnableVertexAttribArray(1);
 
   glBindVertexArray(0);
   return;

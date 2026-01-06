@@ -48,6 +48,10 @@ void Window::init(const ApplicationSpec spec) {
   if (!gladLoadGLLoader((GLADloadproc)glfwGetProcAddress))
     std::cout << "no" << std::endl;
 
+  glEnable(GL_DEPTH_TEST);  
+  //glPolygonMode( GL_FRONT_AND_BACK, GL_LINE );
+
+
   GLFW_REFRESH_RATE;
 
   glfwSetWindowUserPointer(window, this);
@@ -82,7 +86,7 @@ void Window::update() {
 }
 
 void Window::clear() {
-  glClear(GL_COLOR_BUFFER_BIT);
+  glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
 }
 
 bool Window::shouldClose() { return !glfwWindowShouldClose(window); }

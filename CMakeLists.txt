@@ -10,6 +10,7 @@ find_package(OpenGL REQUIRED)
 
 include_directories( ${CMAKE_SOURCE_DIR}/vendor/glad/include)
 include_directories( ${CMAKE_SOURCE_DIR}/vendor/glm/glm)
+include_directories( ${CMAKE_SOURCE_DIR}/vendor/stb)
 
 add_library(glad STATIC ${CMAKE_SOURCE_DIR}/vendor/glad/glad.c)
 
@@ -37,9 +38,11 @@ add_executable(app
   src/renderer/vbo.h
   src/renderer/ibo.cpp
   src/renderer/ibo.h
+  src/renderer/texture_manager.cpp
+  src/renderer/texture_manager.h
 ) 
 
-target_include_directories(app PUBLIC glfw glad glm)
+target_include_directories(app PUBLIC glfw glad glm stb)
 
 if (WIN32)
   target_link_libraries(app glad glfw opengl32 glm)
