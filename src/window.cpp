@@ -49,6 +49,7 @@ void Window::init(const ApplicationSpec spec) {
     std::cout << "no" << std::endl;
 
   glEnable(GL_DEPTH_TEST);  
+  glEnable(GL_CULL_FACE);
   //glPolygonMode( GL_FRONT_AND_BACK, GL_LINE );
 
 
