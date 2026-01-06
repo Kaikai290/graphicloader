@@ -75,9 +75,9 @@ public:
   bool firstPro = true;
   class VAO *vao;
   ShaderManager shader =
-      ShaderManager("../../res/shaderTex.vs", "../../res/shaderTex.fs");
+      ShaderManager("../res/shaderTex.vs", "../res/shaderTex.fs");
   Camera *camera;
-  TextureManager texture = TextureManager("../../res/map.jpg");
+  TextureManager texture = TextureManager("../res/map.jpg");
 
 
   AppLayer(Camera& mainCamera)
