@@ -48,11 +48,6 @@ float vertices[] = {
  -0.5,  0.5,  0.5, 0.25, 0.75,//71
 };
 
-// -0.5, 0.5, 0.5 71
-// 0.5, 0.5, 0.5 64
-// -0.5, 0.5, -0.5 83
-// 0.5, 0.5, -0.5 54
-
 unsigned int indices[] = {
   0, 1, 2, //21, 32, 43,
   21, 22, 23,//53 84 71
@@ -82,8 +77,10 @@ public:
 
   AppLayer(Camera& mainCamera)
     : camera(&mainCamera) { 
-    vao = new VAO(&vertices, sizeof(vertices), indices, 36);
+    vao = new VAO();
+    vao->createTex(&vertices, sizeof(vertices), indices, 36);
   };
+
   ~AppLayer() {
     delete vao;
   }
