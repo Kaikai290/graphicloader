@@ -8,6 +8,9 @@
 #define STB_IMAGE_IMPLEMENTATION
 #include <stb/stb_image.h>
 
+TextureManager::TextureManager() {}
+
+
 TextureManager::TextureManager(std::string filePath) {
   stbi_set_flip_vertically_on_load(true);
   glGenTextures(1, &textureID);

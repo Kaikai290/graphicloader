@@ -1,9 +1,15 @@
 #include "shader_manager.h"
 
+ShaderManager::ShaderManager() {}
+
 ShaderManager::ShaderManager(std::string VertexShaderFilePath,
                              std::string FragmentShaderFilePath) {
-  ShaderProgram = glCreateProgram();
+  this->createProgram();
   this->createShader(VertexShaderFilePath, FragmentShaderFilePath);
+}
+
+void ShaderManager::createProgram() {
+  ShaderProgram = glCreateProgram();
 }
 
 ShaderSource

@@ -22,8 +22,11 @@ public:
   unsigned int ShaderProgram;
 
 public:
+  ShaderManager();
   ShaderManager(std::string VertexShaderFilePath,
                 std::string FragmentShaderFilePath);
+
+  void createProgram();
 
   void createShader(std::string VertexShaderFilePath,
                     std::string FragmentShaderFilePath);

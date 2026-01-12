@@ -5,6 +5,7 @@
 
 class TextureManager {
 public:
+  TextureManager();
   TextureManager(std::string filePath);
   ~TextureManager(); 
 
