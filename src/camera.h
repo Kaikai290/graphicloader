@@ -1,6 +1,7 @@
 #ifndef CAMERA_H
 #define CAMERA_H
 
+#include "glm/ext/vector_float3.hpp"
 #include <glm/glm.hpp>
 #include <glm/gtc/matrix_transform.hpp>
 #include <glm/gtc/type_ptr.hpp>
@@ -14,6 +15,7 @@ public:
   glm::mat4& getProjection() ;
   glm::mat4& getView() ;
 
+  glm::vec3& getPosistion();
   float& getPitch() ;
   float& getYaw() ;
 

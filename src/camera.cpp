@@ -28,6 +28,10 @@ glm::mat4& Camera::getView(){
   return view;
 }
 
+glm::vec3& Camera::getPosistion() {
+  return cameraPos;
+}
+
 float& Camera::getPitch() {
   return pitch;
 }
