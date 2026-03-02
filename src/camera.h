@@ -6,9 +6,10 @@
 #include <glm/gtc/matrix_transform.hpp>
 #include <glm/gtc/type_ptr.hpp>
 
-class Camera {
+namespace LZ {
+class LazyCamera {
 public:
-  Camera(int width, int height);
+  LazyCamera(int width, int height);
 
   void update();
 
@@ -53,5 +54,5 @@ private:
   int screenHeight;
   float aspectRatio;
 };
-
+}
 #endif

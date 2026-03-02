@@ -5,6 +5,7 @@
 #include <iostream>
 #include <chrono>
 
+namespace LZ {
 class Log {
 public:
 template<typename T>
@@ -20,4 +21,5 @@ template<typename T>
   std::cout << "INFO: " << t << std::endl;
   }
 };
+}
 #endif

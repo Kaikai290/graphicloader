@@ -4,6 +4,11 @@
 #include "vbo.h"
 #include "ibo.h"
 
+#define VERTEX 0x001
+#define TEXS 0x002
+#define NORM 0x004
+#define TEXNORM 0x006
+
 enum VAOtype {
   NULLTYPE,
   TEX,
@@ -15,9 +20,7 @@ public:
   VAO();
   ~VAO();
 
-  void createTex(const void *verticesData, unsigned int size, const unsigned int *indicesData, unsigned int count);
-
-  void createTexNor(const void *verticesData, unsigned int size, const unsigned int *indicesData, unsigned int count);
+  void createVAO(const void *verticesData, unsigned int size, const unsigned int *indicesData, unsigned int count, unsigned int TYPE);
 
   void bind();
   void unbind();

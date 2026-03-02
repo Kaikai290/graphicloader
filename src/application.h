@@ -2,23 +2,25 @@
 #define APPLICATION_H
 
 #include <GLFW/glfw3.h>
+#include <memory>
 #include <vector>
 
-#include "window.h"
 #include "layer.h"
+#include "window.h"
 
 #include "camera.h"
 #include "key.h"
 
+namespace LZ {
 struct ScreenDim {
   int width = 900;
   int height = 600;
-  float resolution = (float)width/(float)height; 
+  float resolution = (float)width / (float)height;
 
   void setDimension(int x, int y) {
     width = x;
     height = y;
-    resolution = (float)width/(float)height; 
+    resolution = (float)width / (float)height;
   }
 };
 
@@ -36,14 +38,14 @@ class Application {
 private:
   ApplicationSpec spec;
   Window *window;
-  Camera *mainCamera;
+  std::shared_ptr<LazyCamera> mainCamera;
 
   float deltaTime = 0.0f;
   float prevTime;
 
   Key keys;
 
-  std::vector<Layer *> layers;
+  std::vector<std::unique_ptr<Layer>> layers;
 
   bool running = false;
 
@@ -51,21 +53,27 @@ public:
   Application(ApplicationSpec spec);
   ~Application();
 
-  static Application& getApplication();
+  static Application &getApplication();
 
-  ScreenDim& getDimensions();
-  
-  Camera& getMainCamera();
+  ScreenDim &getDimensions();
+
+  LazyCamera &getMainCamera();
 
   void run();
   void stop();
   void calculateTime();
 
-  void pushLayer(Layer *layer);
+  template <typename TLayer> void pushLayer() {
+    layers.push_back(std::make_unique<TLayer>());
+    layers.back()->setup(mainCamera);
+  }
+  template <typename TLayer> void pushLayer(LazyCamera &camera) {
+    layers.push_back(std::make_unique<TLayer>());
+  }
 
-  Key& getKeys();
-  std::vector<unsigned int>& getKeyStates();
-  std::vector<unsigned int>& getPrevKeyStates();
+  Key &getKeys();
+  std::vector<unsigned int> &getKeyStates();
+  std::vector<unsigned int> &getPrevKeyStates();
 };
-
+} // namespace LZ
 #endif

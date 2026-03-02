@@ -65,34 +65,41 @@ unsigned int indices[] = {
 
 float moveSpeed = 10.0f;
 
-class AppLayer : public Layer {
+class AppLayer : public LZ::Layer {
 public:
   bool firstPro = true;
   class VAO *vao;
   ShaderManager shader =
       ShaderManager("../res/shaderTex.vs", "../res/shaderTex.fs");
-  Camera *camera;
+  std::shared_ptr<LZ::LazyCamera> camera;
   TextureManager texture = TextureManager("../res/map.jpg");
 
 
-  AppLayer(Camera& mainCamera)
+  AppLayer() {}
+  AppLayer(LZ::LazyCamera& mainCamera)
     : camera(&mainCamera) { 
     vao = new VAO();
-    vao->createTex(&vertices, sizeof(vertices), indices, 36);
+    vao->createVAO(&vertices, sizeof(vertices), indices, 36, TEXS);
   };
 
   ~AppLayer() {
     delete vao;
   }
 
+  void setup(std::shared_ptr<LZ::LazyCamera> mainCamera) {
+    camera = mainCamera;
+    vao = new VAO();
+    vao->createVAO(&vertices, sizeof(vertices), indices, 36, TEXS);
+  }
+
   void processInput(float deltaTime) {
-    auto &keys = Application::getApplication().getKeyStates();
+    auto &keys = LZ::Application::getApplication().getKeyStates();
 
     for (unsigned int i = 0; i != 1024; i++) {
       switch (i){
       case GLFW_KEY_ESCAPE:
         if(keys[i] == PRESSED)
-          Application::getApplication().stop();
+          LZ::Application::getApplication().stop();
         break;
       case GLFW_KEY_A:
         if(keys[i] == PRESSED) {

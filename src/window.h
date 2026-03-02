@@ -5,6 +5,7 @@
 #include <cstdint>
 #include <string>
 
+namespace LZ {
 struct ApplicationSpec;
 
 class Window {
@@ -25,5 +26,5 @@ public:
 
   const GLFWwindow* getWindow() const;
 };
-
+}
 #endif

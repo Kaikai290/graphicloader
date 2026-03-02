@@ -6,6 +6,8 @@
 #include "application.h"
 #include "window.h"
   
+namespace LZ {
+
 static double lastX;
 static double lastY;
 
@@ -21,7 +23,6 @@ void mouseButtonCallback(GLFWwindow *window, int button, int action, int mods);
 void scrollCallback(GLFWwindow *window, double xoffset, double yoffset);
 
 void windowSizeCallback(GLFWwindow *window, int width, int height);
-
 Window::Window() {}
 
 Window::~Window() { glfwDestroyWindow(window); }
@@ -120,7 +121,7 @@ if (firstMove)
     xoffset *= sensitivity;
     yoffset *= sensitivity;
 
-    Camera& cam = Application::getApplication().getMainCamera();
+    LazyCamera& cam = Application::getApplication().getMainCamera();
     float& yaw = cam.getYaw();
     float& pitch = cam.getPitch();
 
@@ -152,4 +153,5 @@ void windowSizeCallback(GLFWwindow *window, int width, int height) {
   screen.width = width;
   screen.height = height;
   Application::getApplication().getMainCamera().setDimension(width, height); 
+}
 }

@@ -2,12 +2,14 @@
 #include <GLFW/glfw3.h>
 
 #include <iostream>
+#include <memory>
 #include <vector>
 
 #include "application.h"
 #include "camera.h"
 #include "log.h"
 
+namespace LZ {
 void errorCallback(int code, const char *description);
 
 static Application *app = nullptr;
@@ -22,7 +24,7 @@ Application::Application(ApplicationSpec spec) : spec(spec) {
     Log::printInfo("Window Created");
   }
   window->init(spec);
-  mainCamera = new Camera(spec.dimensions.width, spec.dimensions.height);
+  mainCamera = std::make_shared<LazyCamera>(spec.dimensions.width, spec.dimensions.height);
   if (mainCamera) {
     Log::printInfo("Main Camera Created");
   }
@@ -32,7 +34,6 @@ Application::Application(ApplicationSpec spec) : spec(spec) {
 Application::~Application() {
   delete window;
   Log::printInfo("Window Deleted");
-  delete mainCamera;
   Log::printInfo("Main Camera Deleted");
   glfwTerminate();
 }
@@ -41,7 +42,7 @@ Application &Application::getApplication() { return *app; }
 
 ScreenDim &Application::getDimensions() { return spec.dimensions; }
 
-Camera &Application::getMainCamera() { return *mainCamera; }
+LazyCamera &Application::getMainCamera() { return *mainCamera; }
 
 void Application::run() {
   running = true;
@@ -52,11 +53,11 @@ void Application::run() {
     running = window->shouldClose();
     window->clear();
 
-    for (auto layer : layers) {
+    for (const std::unique_ptr<Layer> &layer : layers) {
       layer->update(deltaTime);
     }
 
-    for (auto layer : layers) {
+    for (const std::unique_ptr<Layer> &layer : layers) {
       layer->render();
     }
 
@@ -72,8 +73,6 @@ void Application::calculateTime() {
   prevTime = currTime;
 }
 
-void Application::pushLayer(Layer *layer) { layers.push_back(layer); }
-
 Key &Application::getKeys() { return keys; }
 
 std::vector<unsigned int> &Application::getKeyStates() {
@@ -83,3 +82,4 @@ std::vector<unsigned int> &Application::getKeyStates() {
 std::vector<unsigned int> &Application::getPrevKeyStates() {
   return keys.getPrevStates();
 }
+} // namespace LZ

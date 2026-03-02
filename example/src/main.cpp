@@ -1,16 +1,17 @@
 #include <glad/glad.h>
 #include <GLFW/glfw3.h>
+#include <memory>
 
 #include "examplelayer.h"
 #include "application.h"
 #include "window.h"
 
 int main(void) {
-  ApplicationSpec spec;
+  LZ::ApplicationSpec spec;
   spec.mouseLock = true;
-  Application app(spec);
-  AppLayer *example = new AppLayer(app.getMainCamera());
-  app.pushLayer(example);
+
+
+  LZ::Application app(spec);
+  app.pushLayer<AppLayer>();
   app.run();
-  delete example;
 }

@@ -1,13 +1,13 @@
 #include "camera.h"
-
-Camera::Camera(int width, int height)
+namespace LZ {
+LazyCamera::LazyCamera(int width, int height)
   :screenWidth(width), screenHeight(height){
   aspectRatio = (float)width/(float)height;
   projection = glm::perspective(glm::radians(90.0f), aspectRatio, 0.1f, 100.0f);
   update();
 }
 
-void Camera::update() {
+void LazyCamera::update() {
   glm::vec3 front;
   front.x = cos(glm::radians(yaw)) * cos(glm::radians(pitch));
   front.y = sin(glm::radians(pitch));
@@ -20,59 +20,60 @@ void Camera::update() {
   view = glm::lookAt(cameraPos, cameraPos + cameraFront, cameraUp);
 }
 
-glm::mat4& Camera::getProjection(){
+glm::mat4& LazyCamera::getProjection(){
   return projection;
 }
 
-glm::mat4& Camera::getView(){
+glm::mat4& LazyCamera::getView(){
   return view;
 }
 
-glm::vec3& Camera::getPosistion() {
+glm::vec3& LazyCamera::getPosistion() {
   return cameraPos;
 }
 
-float& Camera::getPitch() {
+float& LazyCamera::getPitch() {
   return pitch;
 }
 
-float& Camera::getYaw() {
+float& LazyCamera::getYaw() {
   return yaw;
 }
 
-glm::vec3& Camera::getFront() {
+glm::vec3& LazyCamera::getFront() {
   return cameraFront;
 }
 
-void Camera::move(float x, float y, float z) {
+void LazyCamera::move(float x, float y, float z) {
   cameraPos.x = x;
   cameraPos.y = y;
   cameraPos.z = z;
 }
 
-void Camera::moveForward(float z) {
+void LazyCamera::moveForward(float z) {
   cameraPos += cameraFront * z;
 }
 
-void Camera::moveRight(float x) {
+void LazyCamera::moveRight(float x) {
   cameraPos += cameraRight * x;
 }
 
-void Camera::moveUp(float y) {
+void LazyCamera::moveUp(float y) {
   cameraPos += cameraUp * y;
 }
 
-void Camera::setDimension(int width, int height) {
+void LazyCamera::setDimension(int width, int height) {
   screenWidth = width;
   screenHeight = height;
   aspectRatio = (float)width/(float)height;
   updateProjection();
 }
 
-void Camera::updateProjection() {
+void LazyCamera::updateProjection() {
   projection = glm::perspective(glm::radians(90.0f), aspectRatio, 0.1f, 100.0f);
 }
 
-void Camera::setProjection(glm::mat4 pro) {
+void LazyCamera::setProjection(glm::mat4 pro) {
   projection = pro;
+}
 }

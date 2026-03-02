@@ -10,6 +10,8 @@ enum {
   HOLD 
 };
 
+namespace LZ {
+
 class Key {
 private:
   std::vector<unsigned int> state;
@@ -26,4 +28,5 @@ public:
   std::vector<unsigned int>& getPrevStates();
 };
 
+}
 #endif

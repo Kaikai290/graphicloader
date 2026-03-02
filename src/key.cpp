@@ -3,6 +3,7 @@
 
 #include "key.h"
 
+namespace LZ {
 Key::Key() : state(1024, RELEASED), prevState(1024, RELEASED){};
 
 Key::~Key() {};
@@ -41,4 +42,5 @@ std::vector<unsigned int>& Key::getStates() {
 
 std::vector<unsigned int>& Key::getPrevStates() {
   return prevState;
+}
 }

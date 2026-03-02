@@ -22,43 +22,56 @@ VAO::~VAO() {
   glDeleteVertexArrays(1, &vaoID);
 }
 
-void VAO::createTex(const void *verticesData, unsigned int size, const unsigned int *indicesData, unsigned int count) {
+void VAO::createVAO(const void *verticesData, unsigned int size, const unsigned int *indicesData, unsigned int count, unsigned int TYPE) {
   glGenVertexArrays(1, &vaoID);
   glBindVertexArray(vaoID);
 
   vboID = new VBO(verticesData, size);
-  iboID = new IBO(indicesData, count);
 
-  glVertexAttribPointer(0, 3, GL_FLOAT, GL_FALSE, 5*sizeof(float), (void *)0);
+  if(indicesData != nullptr)
+    iboID = new IBO(indicesData, count);
+
+  unsigned int spacer = 0;
+  unsigned int offset = 0;
+
+  switch(TYPE) {
+    case VERTEX: 
+      spacer = 3;
+      break;
+    case TEXS:
+      spacer = 5;
+      break;
+    case NORM:
+      spacer = 6;
+      break;
+    case TEXNORM:
+      spacer = 8;
+      break;
+  }
+
+  glVertexAttribPointer(0, 3, GL_FLOAT, GL_FALSE, spacer*sizeof(float), (void *)offset);
   glEnableVertexAttribArray(0);
-  glVertexAttribPointer(1, 2, GL_FLOAT, GL_FALSE, 5*sizeof(float), (void *)(3*sizeof(float)));
-  glEnableVertexAttribArray(1);
+
+  offset += 3;
+
+  if(TYPE & TEXS) {
+    glVertexAttribPointer(1, 2, GL_FLOAT, GL_FALSE, spacer*sizeof(float), (void *)(offset*sizeof(float)));
+    glEnableVertexAttribArray(1);
+    offset += 2;
+  }
+
+  if(TYPE & NORM) {
+    glVertexAttribPointer(2, 2, GL_FLOAT, GL_FALSE, spacer*sizeof(float), (void *)(offset*sizeof(float)));
+    glEnableVertexAttribArray(2);
+    offset += 3;
+  }
 
   glBindVertexArray(0);
 
-  type = TEX;
+  type = TYPE;
   return;
 }
 
-void VAO::createTexNor(const void *verticesData, unsigned int size, const unsigned int *indicesData, unsigned int count) {
-  glGenVertexArrays(1, &vaoID);
-  glBindVertexArray(vaoID);
-
-  vboID = new VBO(verticesData, size);
-  iboID = new IBO(indicesData, count);
-
-  glVertexAttribPointer(0, 3, GL_FLOAT, GL_FALSE, 8*sizeof(float), (void *)0);
-  glEnableVertexAttribArray(0);
-  glVertexAttribPointer(1, 2, GL_FLOAT, GL_FALSE, 8*sizeof(float), (void *)(3*sizeof(float)));
-  glEnableVertexAttribArray(1);
-  glVertexAttribPointer(2, 2, GL_FLOAT, GL_FALSE, 8*sizeof(float), (void *)(5*sizeof(float)));
-  glEnableVertexAttribArray(2);
-
-  glBindVertexArray(0);
-
-  type= TEXNOR;
-  return;
-}
 
 void VAO::bind() {
   glBindVertexArray(vaoID);

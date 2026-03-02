@@ -27,7 +27,7 @@ TextureManager::TextureManager(std::string filePath) {
 
   unsigned char* data = loadData(filePath);
   if(!data) {
-    Log::printError("Failed to load texture");
+    LZ::Log::printError("Failed to load texture");
     return;
   }
   bindData(data);
