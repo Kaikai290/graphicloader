@@ -1,11 +1,17 @@
 #include <glad/glad.h>
 #include <GLFW/glfw3.h>
 
+#include "imgui.h"
+#include "imgui_impl_glfw.h"
+#include "imgui_impl_opengl3.h"
+
 #include <iostream>
 
 #include "application.h"
 #include "window.h"
-  
+
+#include "log.h"
+
 namespace LZ {
 
 static double lastX;
@@ -25,7 +31,7 @@ void scrollCallback(GLFWwindow *window, double xoffset, double yoffset);
 void windowSizeCallback(GLFWwindow *window, int width, int height);
 Window::Window() {}
 
-Window::~Window() { glfwDestroyWindow(window); }
+Window::~Window() {}
 
 void Window::init(const ApplicationSpec spec) {
   glfwWindowHint(GLFW_CONTEXT_VERSION_MAJOR, 4);
@@ -37,21 +43,13 @@ void Window::init(const ApplicationSpec spec) {
   glfwWindowHint(GLFW_CENTER_CURSOR, spec.centerCusor);
   // glfwWindowHint(GLFW_OPENGL_DEBUG_CONTEXT, GLFW_FALSE);
 
-  window =
-      glfwCreateWindow(spec.dimensions.width, spec.dimensions.height,
-                       spec.title.c_str(), NULL, NULL);
+  window = glfwCreateWindow(spec.dimensions.width, spec.dimensions.height,
+                            spec.title.c_str(), NULL, NULL);
   if (!window) {
     glfwTerminate();
     std::cout << "Failed to initalize Window" << std::endl;
   }
   glfwMakeContextCurrent(window);
-
-  if (!gladLoadGLLoader((GLADloadproc)glfwGetProcAddress))
-    std::cout << "no" << std::endl;
-
-  glEnable(GL_DEPTH_TEST);  
-  glEnable(GL_CULL_FACE);
-  //glPolygonMode( GL_FRONT_AND_BACK, GL_LINE );
 
 
   GLFW_REFRESH_RATE;
@@ -74,22 +72,48 @@ void Window::init(const ApplicationSpec spec) {
 
   glfwSetScrollCallback(window, scrollCallback);
 
-  lastTime = glfwGetTime();
+  if (!gladLoadGLLoader((GLADloadproc)glfwGetProcAddress))
+    std::cout << "no" << std::endl;
+
+
+  glEnable(GL_DEPTH_TEST);
+  //glEnable(GL_CULL_FACE);
+  // glPolygonMode( GL_FRONT_AND_BACK, GL_LINE );
+
+  IMGUI_CHECKVERSION();
+  ImGui::CreateContext();
+  ImGuiIO &io = ImGui::GetIO();
+  io.ConfigFlags |=
+      ImGuiConfigFlags_NavEnableKeyboard; // Enable Keyboard Controls
+  io.ConfigFlags |=
+      ImGuiConfigFlags_NavEnableGamepad; // Enable Gamepad Controls
+
+  // Setup Platform/Renderer backends
+  ImGui_ImplGlfw_InitForOpenGL(
+      window, true); // Second param install_callback=true will install
+                     // GLFW callbacks and chain to existing ones.
+  ImGui_ImplOpenGL3_Init();
 }
+
+void Window::shutdown() {
+  ImGui_ImplOpenGL3_Shutdown();
+  ImGui_ImplGlfw_Shutdown();
+  ImGui::DestroyContext(); // should check to see if imgui is init before shutting down?
+
+  if (window) {
+    Log::printInfo("Window Deleted");
+    glfwDestroyWindow(window);
+  }
+}
+
+void Window::pollEvents() { glfwPollEvents(); }
 
 void Window::update() {
+
   glfwSwapBuffers(window);
-
-  glfwPollEvents();
-
-  double currentTime = glfwGetTime();
-  deltaTime = currentTime - lastTime;
-  lastTime = currentTime;
 }
 
-void Window::clear() {
-  glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
-}
+void Window::clear() { glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT); }
 
 bool Window::shouldClose() { return !glfwWindowShouldClose(window); }
 
@@ -105,41 +129,40 @@ void keyCallback(GLFWwindow *window, int key, int scancode, int action,
 }
 
 void cursorPosCallback(GLFWwindow *window, double xpos, double ypos) {
-if (firstMove)
-    {
-        lastX = xpos;
-        lastY = ypos;
-        firstMove = false;
-    }
-  
-    double xoffset = xpos - lastX;
-    double yoffset = lastY - ypos; 
+  if (firstMove) {
     lastX = xpos;
     lastY = ypos;
+    firstMove = false;
+  }
 
-    float sensitivity = 0.1f;
-    xoffset *= sensitivity;
-    yoffset *= sensitivity;
+  double xoffset = xpos - lastX;
+  double yoffset = lastY - ypos;
+  lastX = xpos;
+  lastY = ypos;
 
-    LazyCamera& cam = Application::getApplication().getMainCamera();
-    float& yaw = cam.getYaw();
-    float& pitch = cam.getPitch();
+  float sensitivity = 0.1f;
+  xoffset *= sensitivity;
+  yoffset *= sensitivity;
 
-    yaw   += xoffset;
-    pitch += yoffset;
+  LazyCamera &cam = Application::getApplication().getMainCamera();
+  float &yaw = cam.getYaw();
+  float &pitch = cam.getPitch();
 
-    if(pitch > 89.0f)
-        pitch = 89.0f;
-    if(pitch < -89.0f)
-        pitch = -89.0f;
+  yaw += xoffset;
+  pitch += yoffset;
 
-    glm::vec3 direction;
-    direction.x = cos(glm::radians(yaw)) * cos(glm::radians(pitch));
-    direction.y = sin(glm::radians(pitch));
-    direction.z = sin(glm::radians(yaw)) * cos(glm::radians(pitch));
-    cam.getFront() = glm::normalize(direction);
-    
-    cam.update();
+  if (pitch > 89.0f)
+    pitch = 89.0f;
+  if (pitch < -89.0f)
+    pitch = -89.0f;
+
+  glm::vec3 direction;
+  direction.x = cos(glm::radians(yaw)) * cos(glm::radians(pitch));
+  direction.y = sin(glm::radians(pitch));
+  direction.z = sin(glm::radians(yaw)) * cos(glm::radians(pitch));
+  cam.getFront() = glm::normalize(direction);
+
+  cam.update();
 }
 
 void mouseButtonCallback(GLFWwindow *window, int button, int action, int mods) {
@@ -149,9 +172,9 @@ void scrollCallback(GLFWwindow *window, double xoffset, double yoffset) {}
 
 void windowSizeCallback(GLFWwindow *window, int width, int height) {
   glViewport(0, 0, width, height);
-  ScreenDim& screen = Application::getApplication().getDimensions();
+  ScreenDim &screen = Application::getApplication().getDimensions();
   screen.width = width;
   screen.height = height;
-  Application::getApplication().getMainCamera().setDimension(width, height); 
+  Application::getApplication().getMainCamera().setDimension(width, height);
 }
-}
+} // namespace LZ

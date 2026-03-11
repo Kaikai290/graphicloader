@@ -6,6 +6,7 @@
 #include <vector>
 
 #include "layer.h"
+#include "overlay.h"
 #include "window.h"
 
 #include "camera.h"
@@ -37,7 +38,7 @@ struct ApplicationSpec {
 class Application {
 private:
   ApplicationSpec spec;
-  Window *window;
+  std::shared_ptr<Window> window;
   std::shared_ptr<LazyCamera> mainCamera;
 
   float deltaTime = 0.0f;
@@ -46,6 +47,7 @@ private:
   Key keys;
 
   std::vector<std::unique_ptr<Layer>> layers;
+  std::vector<std::unique_ptr<Overlay>> overlays;
 
   bool running = false;
 
@@ -69,6 +71,9 @@ public:
   }
   template <typename TLayer> void pushLayer(LazyCamera &camera) {
     layers.push_back(std::make_unique<TLayer>());
+  }
+  template <typename TOverlay> void pushOverlay() {
+    overlays.push_back(std::make_unique<TOverlay>());
   }
 
   Key &getKeys();

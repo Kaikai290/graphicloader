@@ -66,6 +66,13 @@ void VAO::createVAO(const void *verticesData, unsigned int size, const unsigned 
     offset += 3;
   }
 
+  const GLuint zero = 0;
+  glGenBuffers(1, &atomBuf);
+  glBindBuffer(GL_ATOMIC_COUNTER_BUFFER, atomBuf);
+  glBufferData(GL_ATOMIC_COUNTER_BUFFER, 16 * sizeof(GLuint), NULL, GL_DYNAMIC_COPY);
+  glBindBufferBase(GL_ATOMIC_COUNTER_BUFFER, 0, atomBuf);
+  glBufferSubData(GL_ATOMIC_COUNTER_BUFFER, 2*sizeof(GLuint), sizeof(GLuint), &zero);
+
   glBindVertexArray(0);
 
   type = TYPE;

@@ -20,6 +20,10 @@ template<typename T>
   static void printInfo(T t){ ;
   std::cout << "INFO: " << t << std::endl;
   }
+template<typename T>
+  static void printInfo(std::string text, T t){ ;
+  std::cout << "INFO: " << text << " " << t << std::endl;
+  }
 };
 }
 #endif

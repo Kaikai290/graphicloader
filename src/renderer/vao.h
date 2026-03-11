@@ -1,5 +1,7 @@
 #ifndef VAO_H
 #define VAO_H
+#include <glad/glad.h>
+#include <GLFW/glfw3.h>
 
 #include "vbo.h"
 #include "ibo.h"
@@ -19,6 +21,7 @@ class VAO {
 public:
   VAO();
   ~VAO();
+  GLuint atomBuf;
 
   void createVAO(const void *verticesData, unsigned int size, const unsigned int *indicesData, unsigned int count, unsigned int TYPE);
 

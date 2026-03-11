@@ -13,13 +13,13 @@ private:
   GLFWwindow *window;
 
 
-  double deltaTime = 0.0f;
-  double lastTime = 0.0f;
 public:
   Window();
   ~Window();
 
   void init(ApplicationSpec spec);
+  void shutdown();
+  void pollEvents();
   void update();
   void clear();
   bool shouldClose();

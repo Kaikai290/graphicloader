@@ -1,6 +1,8 @@
 #include <glad/glad.h>
 #include <GLFW/glfw3.h>
 
+#include "imgui.h"
+
 #include <iostream>
 #include <memory>
 #include <vector>
@@ -17,13 +19,15 @@ static Application *app = nullptr;
 Application::Application(ApplicationSpec spec) : spec(spec) {
   if (glfwInit())
     Log::printInfo("Initalize GLFW");
+
   glfwSetErrorCallback(errorCallback);
   app = this;
-  window = new Window();
+  window = std::make_shared<Window>();
   if (window) {
     Log::printInfo("Window Created");
   }
   window->init(spec);
+
   mainCamera = std::make_shared<LazyCamera>(spec.dimensions.width, spec.dimensions.height);
   if (mainCamera) {
     Log::printInfo("Main Camera Created");
@@ -32,9 +36,8 @@ Application::Application(ApplicationSpec spec) : spec(spec) {
 }
 
 Application::~Application() {
-  delete window;
-  Log::printInfo("Window Deleted");
-  Log::printInfo("Main Camera Deleted");
+  Log::printInfo("Main Camera Deleted"); //move to lazy cam class
+  window->shutdown();
   glfwTerminate();
 }
 
@@ -51,6 +54,9 @@ void Application::run() {
     calculateTime();
 
     running = window->shouldClose();
+
+    window->pollEvents();
+
     window->clear();
 
     for (const std::unique_ptr<Layer> &layer : layers) {
@@ -59,6 +65,13 @@ void Application::run() {
 
     for (const std::unique_ptr<Layer> &layer : layers) {
       layer->render();
+    }
+    for (const std::unique_ptr<Overlay> &overlay : overlays) {
+      overlay->update(deltaTime);
+    }
+
+    for (const std::unique_ptr<Overlay> &overlay : overlays) {
+      overlay->render();
     }
 
     window->update();

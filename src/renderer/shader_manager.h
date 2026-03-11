@@ -10,16 +10,13 @@
 
 #include <fstream>
 #include <iostream>
+#include <map>
 #include <sstream>
-
-struct ShaderSource {
-  std::string VertexShader;
-  std::string FragmentShader;
-};
 
 class ShaderManager {
 public:
   unsigned int ShaderProgram;
+  std::map<std::string, GLint> files;
 
 public:
   ShaderManager();
@@ -28,8 +25,14 @@ public:
 
   void createProgram();
 
-  void createShader(std::string VertexShaderFilePath,
-                    std::string FragmentShaderFilePath);
+  void createShader();
+
+  void setVertex(std::string vertexShaderPath);
+  void setFragment(std::string fragmentShaderPath);
+  void setGeometry(std::string geoShaderPath);
+  void setTessControl(std::string controlShaderPath);
+  void setTessEval(std::string evalShaderPath);
+
   void useShader();
 
   void setBool(const std::string &name, bool value) const;
@@ -46,9 +49,9 @@ public:
   void setMat4(const std::string &name, const glm::mat4 &mat) const;
 
 private:
-  ShaderSource LoadShadersFromFiles(std::string VertexShaderFilePath,
-                                    std::string FragmentShaderFilePath);
-  void GetShaderLog(unsigned int Shader, std::string ShaderType);
+  void LoadShadersFromFiles();
+  void convertShaders(std::string& shader, GLint type);
+  void GetShaderLog(unsigned int Shader, GLint ShaderType);
 };
 
 #endif // !SHADER_MANAGER_H

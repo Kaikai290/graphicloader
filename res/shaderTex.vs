@@ -17,12 +17,24 @@ vec4 shift = vec4(
 0.0,
 0.0);
 
-uniform mat4 model;
-uniform mat4 view;
+layout (location = 0) uniform mat4 model;
+layout (location = 1) uniform mat4 view;
 uniform mat4 projection;
 
+vec4 quadratic_bezier(vec4 A, vec4 B, vec4 C, float t) {
+  vec4 D = mix(A, B, t);
+
+  vec4 E = mix(B, C, t);
+
+  vec4 P = mix(D, E, t);
+
+  return P;
+}
+
 void main() {
-   gl_Position =  projection * view * model * vec4(aPos, 1.0);
+   mat4 modelMove = model;
+   modelMove[3][0] = modelMove[3][0] + (10 * gl_InstanceID);
+   gl_Position =  projection * view * modelMove * vec4(aPos, 1.0);
    texCoords = texCoord;
    //gl_Position  = move * vec4(aPos, 1.0);
 }
