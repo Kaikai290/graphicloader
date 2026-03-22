@@ -35,7 +35,7 @@ void main() {
   vModel[3][0] =  ((x - 512)/2) + (float(xOffset & 0xFF)/256.0);
   vModel[3][2] =  ((512 - z)/2) + (float(zOffset & 0xFF)/256.0);
   vModel[1][1] = vModel[1][1] * clamp((float(yOffset & 0xFF)/256.0), 0.6, 1.0);
-  vModel = rotation * vModel;
+  //vModel = rotation * vModel;
    gl_Position =  projection * view * vModel * vec4(Vertex, 1.0);
   green = xOffset/256.0;
 }

@@ -9,6 +9,9 @@ public:
   TextureManager(std::string filePath);
   ~TextureManager(); 
 
+  int width;
+  int height;
+  int nrChannels;
 
 
 private:
@@ -17,10 +20,6 @@ private:
   void deleteData(unsigned char* data);
 
   unsigned int textureID;
-  int width;
-  int height;
-  int nrChannels;
-
 };
 
 #endif

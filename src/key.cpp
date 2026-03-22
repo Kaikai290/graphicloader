@@ -36,6 +36,14 @@ void Key::updatePrevState(int key, int action) {
     prevState[key] = RELEASED;
 }
 
+void Key::keyTap(int key) {
+  state[key] = HOLD;
+}
+
+Key& Key::getKeys() {
+  return *this;
+}
+
 std::vector<unsigned int>& Key::getStates() {
   return state;
 }

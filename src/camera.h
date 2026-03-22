@@ -15,7 +15,7 @@ public:
 
   glm::mat4& getProjection() ;
   glm::mat4& getView() ;
-
+  float& getAspectRatio() {return aspectRatio;}
   glm::vec3& getPosistion();
   float& getPitch() ;
   float& getYaw() ;

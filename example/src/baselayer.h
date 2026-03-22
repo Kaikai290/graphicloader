@@ -15,6 +15,8 @@
 #include "renderer/texture_manager.h"
 #include "renderer/vao.h"
 
+
+#include "grasslayer.h"
 #include "log.h"
 
 float vertices[] = {
@@ -64,7 +66,6 @@ unsigned int indices[] = {
 };
 
 
-float moveSpeed = 10.0f;
 
 class BaseLayer : public LZ::Layer {
 public:
@@ -73,7 +74,7 @@ public:
   ShaderManager shader = ShaderManager();
   ShaderManager grassShader = ShaderManager();
   std::shared_ptr<LZ::LazyCamera> camera;
-  TextureManager texture = TextureManager("../res/map.jpg");
+  TextureManager texture = TextureManager("../res/iceland.jpg");
   GLuint grassVAO, grassVBO;
 
   BaseLayer() {
@@ -110,8 +111,8 @@ public:
   }
 
   void processInput(float deltaTime) {
-    auto &keys = LZ::Application::getApplication().getKeyStates();
-
+    auto &inputs = LZ::Application::getApplication().getKeyStates();
+    auto &keys = inputs.getStates(); 
     for (unsigned int i = 0; i != 1024; i++) {
       switch (i) {
       case GLFW_KEY_ESCAPE:

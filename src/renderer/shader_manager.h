@@ -32,6 +32,7 @@ public:
   void setGeometry(std::string geoShaderPath);
   void setTessControl(std::string controlShaderPath);
   void setTessEval(std::string evalShaderPath);
+  void setCompute(std::string computeShaderPath);
 
   void useShader();
 

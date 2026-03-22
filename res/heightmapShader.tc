@@ -1,0 +1,34 @@
+#version 460 core
+
+// specify number of control points per patch output
+// this value controls the size of the input and output arrays
+layout (vertices=4) out;
+
+in vec2 texCoords[];
+
+out vec2 textureCoord[];
+// varying input from vertex shader
+// varying output to evaluation shader
+
+void main()
+{
+    // ----------------------------------------------------------------------
+    // pass attributes through
+    //TextureCoord[gl_InvocationID] = TexCoords[gl_InvocationID];
+
+    // ----------------------------------------------------------------------
+    // invocation zero controls tessellation levels for the entire patch
+    if (gl_InvocationID == 0)
+    {
+        gl_TessLevelOuter[0] = 16;
+        gl_TessLevelOuter[1] = 16;
+        gl_TessLevelOuter[2] = 16;
+        gl_TessLevelOuter[3] = 16;
+
+        gl_TessLevelInner[0] = 16;
+        gl_TessLevelInner[1] = 16;
+    }
+
+    textureCoord[gl_InvocationID] = texCoords[gl_InvocationID];
+    gl_out[gl_InvocationID].gl_Position = gl_in[gl_InvocationID].gl_Position;
+}

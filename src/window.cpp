@@ -29,6 +29,7 @@ void mouseButtonCallback(GLFWwindow *window, int button, int action, int mods);
 void scrollCallback(GLFWwindow *window, double xoffset, double yoffset);
 
 void windowSizeCallback(GLFWwindow *window, int width, int height);
+
 Window::Window() {}
 
 Window::~Window() {}
@@ -41,6 +42,7 @@ void Window::init(const ApplicationSpec spec) {
   glfwWindowHint(GLFW_RESIZABLE, spec.resizable);
   glfwWindowHint(GLFW_FOCUSED, spec.windowFocused);
   glfwWindowHint(GLFW_CENTER_CURSOR, spec.centerCusor);
+  glfwWindowHint(GLFW_SAMPLES, spec.samples);
   // glfwWindowHint(GLFW_OPENGL_DEBUG_CONTEXT, GLFW_FALSE);
 
   window = glfwCreateWindow(spec.dimensions.width, spec.dimensions.height,
@@ -76,6 +78,7 @@ void Window::init(const ApplicationSpec spec) {
     std::cout << "no" << std::endl;
 
 
+  glfwSwapInterval(1);
   glEnable(GL_DEPTH_TEST);
   //glEnable(GL_CULL_FACE);
   // glPolygonMode( GL_FRONT_AND_BACK, GL_LINE );

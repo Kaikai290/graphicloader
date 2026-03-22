@@ -34,6 +34,10 @@ void ShaderManager::setTessEval(std::string evalShaderPath) {
   files[evalShaderPath] = GL_TESS_EVALUATION_SHADER;
 }
 
+void ShaderManager::setCompute(std::string computeShaderPath) {
+ files[computeShaderPath]  = GL_COMPUTE_SHADER;
+}
+
 void ShaderManager::LoadShadersFromFiles() {
   for(auto shader: files) {
     LZ::Log::printInfo("Creating Shader: ", shader.first); 

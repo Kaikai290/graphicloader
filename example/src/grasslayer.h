@@ -1,4 +1,5 @@
-
+#ifndef GRASSLAYER_H
+#define GRASSLAYER_H
 #include <glad/glad.h>
 #include <GLFW/glfw3.h>
 
@@ -50,8 +51,8 @@ public:
   }
 
   void processInput(float deltaTime) {
-    auto &keys = LZ::Application::getApplication().getKeyStates();
-
+    auto &inputs = LZ::Application::getApplication().getKeyStates();
+    auto &keys = inputs.getStates(); 
     for (unsigned int i = 0; i != 1024; i++) {
       switch (i) {
       case GLFW_KEY_ESCAPE:
@@ -129,4 +130,6 @@ public:
     glDrawArraysInstanced(GL_TRIANGLE_STRIP, 0, 6,  1024 * 1024);
   }
 };
+
+#endif
 

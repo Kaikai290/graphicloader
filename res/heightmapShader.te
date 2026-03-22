@@ -1,0 +1,46 @@
+// tessellation evaluation shader
+#version 460 core
+
+layout (quads, fractional_odd_spacing, ccw) in;
+
+uniform sampler2D texture0;  // the texture corresponding to our height map
+
+layout (location = 0) uniform mat4 model;
+layout (location = 1) uniform mat4 view;
+layout (location = 2) uniform mat4 projection;
+
+// received from Tessellation Control Shader - all texture coordinates for the patch vertices
+in vec2 textureCoord[];
+
+out float Height;
+
+uniform bool heightMap;
+
+// send to Fragment Shader for coloring
+//out float Height;
+
+void main()
+{
+  vec4 p1 = mix(gl_in[0].gl_Position, gl_in[1].gl_Position, gl_TessCoord.x);
+  vec4 p2 = mix(gl_in[2].gl_Position, gl_in[3].gl_Position, gl_TessCoord.x);
+  vec4 p3 = mix(p1, p2, gl_TessCoord.y);
+
+
+// Interpolate along top edge using x component of the
+// tessellation coordinate
+
+// Now interpolate those two results using the y component
+// of tessellation coordinate
+
+  vec2 t1 = mix(textureCoord[0], textureCoord[1], gl_TessCoord.x);
+  vec2 t2 = mix(textureCoord[2], textureCoord[3], gl_TessCoord.x);
+  vec2 t3 = mix(t1, t2, gl_TessCoord.y);
+  
+  float height = texture(texture0, t3).r * 64.0f;
+  Height = height;
+  if(heightMap) {
+    p3.y += height;
+  }
+
+  gl_Position = projection * view * p3;
+}

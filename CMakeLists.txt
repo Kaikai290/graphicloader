@@ -5,7 +5,7 @@ set(CMAKE_CXX_STANDARD 20)
 set(CMAKE_CXX_STANDARD_REQUIRED ON)
 set(CMAKE_EXPORT_COMPILE_COMMANDS ON)
 
-include_directories( ${CMAKE_CURRENT_SOURCE_DIR}/vendor/stb)
+include_directories( ${CMAKE_CURRENT_SOURCE_DIR}/vendor)
 include_directories( ${CMAKE_CURRENT_SOURCE_DIR}/vendor/glad/include)
 include_directories( ${CMAKE_CURRENT_SOURCE_DIR}/src)
 include_directories( ${CMAKE_CURRENT_SOURCE_DIR}/vendor/imgui)
@@ -53,25 +53,59 @@ add_library(graphicloader
   vendor/imgui/backends/imgui_impl_glfw.cpp
   vendor/imgui/backends/imgui_impl_opengl3.cpp
 )
-IF(BASEEXAMPLE)
-ADD_DEFINITIONS(-DBASEEXAMPLE=ON)
+
+target_link_libraries(graphicloader PUBLIC glad glfw opengl32 glm)
+
 add_executable(BaseLayer
   example/src/main.cpp
   example/src/baselayer.h
   example/src/imguiexample.h
 )
-  target_link_libraries(graphicloader PUBLIC glad glfw opengl32 glm)
-  target_link_libraries(BaseLayer PUBLIC graphicloader) 
-ENDIF(BASEEXAMPLE)
 
-IF(GRASSEXAMPLE)
-ADD_DEFINITIONS(-DGRASSEXAMPLE=ON)
-  add_executable(GrassLayer
+target_compile_definitions(BaseLayer PUBLIC -DBASEEXAMPLE=1)
+target_link_libraries(BaseLayer PUBLIC graphicloader) 
+
+add_executable(GrassLayer
   example/src/main.cpp
   example/src/grasslayer.h
   example/src/imguiexample.h
 )
-  target_link_libraries(graphicloader PUBLIC glad glfw opengl32 glm)
-  target_link_libraries(GrassLayer PUBLIC graphicloader) 
-ENDIF(GRASSEXAMPLE)
 
+target_compile_definitions(GrassLayer PUBLIC -DGRASSEXAMPLE=1)
+target_link_libraries(GrassLayer PUBLIC graphicloader) 
+
+add_executable(InstanceLayer
+  example/src/main.cpp
+  example/src/instancelayer.h
+  example/src/imguiexample.h
+)
+
+target_compile_definitions(InstanceLayer PUBLIC -DINSTANCEEXAMPLE=1)
+target_link_libraries(InstanceLayer PUBLIC graphicloader) 
+
+add_executable(SpringLayer
+  example/src/main.cpp
+  example/src/springlayer.h
+  example/src/imguiexample.h
+)
+
+target_compile_definitions(SpringLayer PUBLIC -DSPRINGEXAMPLE=1)
+target_link_libraries(SpringLayer PUBLIC graphicloader) 
+
+add_executable(HeightMapLayer
+  example/src/main.cpp
+  example/src/heightmaplayer.h
+  example/src/imguiexample.h
+)
+
+target_compile_definitions(HeightMapLayer PUBLIC -DHEIGHTMAPEXAMPLE=1)
+target_link_libraries(HeightMapLayer PUBLIC graphicloader) 
+
+add_executable(FlockingLayer
+  example/src/main.cpp
+  example/src/flockinglayer.h
+  example/src/imguiexample.h
+)
+
+target_compile_definitions(FlockingLayer PUBLIC -DFLOCKINGEXAMPLE=1)
+target_link_libraries(FlockingLayer PUBLIC graphicloader) 

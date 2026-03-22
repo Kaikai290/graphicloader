@@ -88,8 +88,8 @@ void Application::calculateTime() {
 
 Key &Application::getKeys() { return keys; }
 
-std::vector<unsigned int> &Application::getKeyStates() {
-  return keys.getStates();
+Key& Application::getKeyStates() {
+  return keys.getKeys();
 }
 
 std::vector<unsigned int> &Application::getPrevKeyStates() {

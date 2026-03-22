@@ -33,6 +33,7 @@ struct ApplicationSpec {
   int resizable = GLFW_TRUE;
   int windowFocused = GLFW_TRUE;
   int centerCusor = GLFW_FALSE;
+  GLuint samples = 16;
 };
 
 class Application {
@@ -77,7 +78,7 @@ public:
   }
 
   Key &getKeys();
-  std::vector<unsigned int> &getKeyStates();
+  Key& getKeyStates();
   std::vector<unsigned int> &getPrevKeyStates();
 };
 } // namespace LZ

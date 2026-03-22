@@ -4,11 +4,7 @@
 #include <vector>
 #include <windows.h>
 
-enum { 
-  RELEASED, 
-  PRESSED,
-  HOLD 
-};
+enum { RELEASED, PRESSED, HOLD };
 
 namespace LZ {
 
@@ -23,10 +19,11 @@ public:
 
   void updateState(int key, int action);
   void updatePrevState(int key, int action);
+  void keyTap(int key);
 
-  std::vector<unsigned int>& getStates();
-  std::vector<unsigned int>& getPrevStates();
-};
-
+  Key& getKeys();
+    std::vector<unsigned int> &getStates();
+    std::vector<unsigned int> &getPrevStates();
+  };
 }
 #endif
