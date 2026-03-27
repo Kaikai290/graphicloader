@@ -5,6 +5,7 @@
 #include <glm/glm.hpp>
 #include <glm/gtc/matrix_transform.hpp>
 #include <glm/gtc/type_ptr.hpp>
+#include <mmeapi.h>
 
 #include "application.h"
 #include "camera.h"
@@ -152,7 +153,7 @@ public:
   }
 
   void processInput(float deltaTime) {
-    auto &inputs = LZ::Application::getApplication().getKeyStates();
+    auto &inputs = LZ::Application::getApplication().getInputs();
     auto &keys = inputs.getStates(); 
     for (unsigned int i = 0; i != 1024; i++) {
       switch (i) {

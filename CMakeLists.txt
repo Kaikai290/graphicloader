@@ -30,8 +30,10 @@ add_library(graphicloader
   src/log.h
   src/camera.cpp
   src/camera.h
-  src/key.cpp
-  src/key.h
+  src/input.cpp
+  src/input.h
+  src/event.cpp
+  src/event.h
 
   src/renderer/shader_manager.cpp
   src/renderer/shader_manager.h

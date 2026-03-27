@@ -8,10 +8,10 @@
 
 #include "application.h"
 #include "camera.h"
+#include "event.h"
 #include "glm/detail/qualifier.hpp"
 #include "glm/ext/vector_float3.hpp"
 #include "glm/ext/vector_float4.hpp"
-#include "key.h"
 #include "layer.h"
 
 #include "renderer/shader_manager.h"
@@ -75,6 +75,19 @@ public:
     camera->setProjection(projection);
   }
 
+  virtual void event(LZ::Event& event) override {
+    switch (event.getEventType()) {
+      case LZ::None:
+        break;
+      case LZ::Key:
+        std::cout << static_cast<LZ::KeyEvent *>(&event)->getKeyCode() << std::endl;
+        break;
+      case LZ::MouseMove:
+        std::cout << static_cast<LZ::MouseMoveEvent *>(&event)->getXpos() << static_cast<LZ::MouseMoveEvent *>(&event)->getYpos() << std::endl;
+        break;
+    }
+  }
+
   virtual void update(float deltaTime) override {
 
     glClearColor(0.3f, 0.62f, 0.89f, 1.0f);
@@ -101,7 +114,7 @@ public:
   }
 
   void processInput(float deltaTime) {
-    auto &inputs = LZ::Application::getApplication().getKeyStates();
+    auto &inputs = LZ::Application::getApplication().getInputs();
     auto &keys = inputs.getStates(); 
     float moveSpeed = 50;
     static bool wireframe = false;

@@ -1,16 +1,19 @@
 #ifndef APPLICATION_H
 #define APPLICATION_H
 
+#include <glad/glad.h>
 #include <GLFW/glfw3.h>
 #include <memory>
 #include <vector>
+#include <queue>
 
 #include "layer.h"
 #include "overlay.h"
 #include "window.h"
 
 #include "camera.h"
-#include "key.h"
+#include "input.h"
+#include "event.h"
 
 namespace LZ {
 struct ScreenDim {
@@ -45,10 +48,12 @@ private:
   float deltaTime = 0.0f;
   float prevTime;
 
-  Key keys;
+  Input inputs;
 
   std::vector<std::unique_ptr<Layer>> layers;
   std::vector<std::unique_ptr<Overlay>> overlays;
+
+  std::queue<std::shared_ptr<Event>> events;
 
   bool running = false;
 
@@ -66,6 +71,14 @@ public:
   void stop();
   void calculateTime();
 
+  void eventDispatcher();
+
+  bool keyEvent(GLFWwindow* window, int keyCode, int action);
+
+  template <typename TEvent> void pushEvent(std::shared_ptr<TEvent> event) {
+    events.push(event);
+  }
+
   template <typename TLayer> void pushLayer() {
     layers.push_back(std::make_unique<TLayer>());
     layers.back()->setup(mainCamera);
@@ -77,8 +90,10 @@ public:
     overlays.push_back(std::make_unique<TOverlay>());
   }
 
-  Key &getKeys();
-  Key& getKeyStates();
+  Input &getInputs();
+
+  void updateMouse(float x, float y, float xLast, float yLast);
+
   std::vector<unsigned int> &getPrevKeyStates();
 };
 } // namespace LZ

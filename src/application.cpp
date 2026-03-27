@@ -1,9 +1,3 @@
-#include <glad/glad.h>
-#include <GLFW/glfw3.h>
-
-#include "imgui.h"
-
-#include <iostream>
 #include <memory>
 #include <vector>
 
@@ -28,7 +22,8 @@ Application::Application(ApplicationSpec spec) : spec(spec) {
   }
   window->init(spec);
 
-  mainCamera = std::make_shared<LazyCamera>(spec.dimensions.width, spec.dimensions.height);
+  mainCamera = std::make_shared<LazyCamera>(spec.dimensions.width,
+                                            spec.dimensions.height);
   if (mainCamera) {
     Log::printInfo("Main Camera Created");
   }
@@ -36,7 +31,7 @@ Application::Application(ApplicationSpec spec) : spec(spec) {
 }
 
 Application::~Application() {
-  Log::printInfo("Main Camera Deleted"); //move to lazy cam class
+  Log::printInfo("Main Camera Deleted"); // move to lazy cam class
   window->shutdown();
   glfwTerminate();
 }
@@ -59,15 +54,18 @@ void Application::run() {
 
     window->clear();
 
+    eventDispatcher();
+
+    for (const std::unique_ptr<Overlay> &overlay : overlays) {
+      overlay->update(deltaTime);
+    }
+
     for (const std::unique_ptr<Layer> &layer : layers) {
       layer->update(deltaTime);
     }
 
     for (const std::unique_ptr<Layer> &layer : layers) {
       layer->render();
-    }
-    for (const std::unique_ptr<Overlay> &overlay : overlays) {
-      overlay->update(deltaTime);
     }
 
     for (const std::unique_ptr<Overlay> &overlay : overlays) {
@@ -86,13 +84,28 @@ void Application::calculateTime() {
   prevTime = currTime;
 }
 
-Key &Application::getKeys() { return keys; }
+void Application::eventDispatcher() {
+  while(events.size() != 0) {
+    for(const std::unique_ptr<Layer> &layer : layers) {
+      layer->event(*events.front());
+    }
+    events.pop();
+  }
+}
 
-Key& Application::getKeyStates() {
-  return keys.getKeys();
+bool Application::keyEvent(GLFWwindow* window, int keyCode, int action) {
+  std::cout << keyCode << std::endl;
+  return true;
+}
+
+Input &Application::getInputs() { return inputs; }
+
+
+void Application::updateMouse(float x, float y, float xLast, float yLast) {
+  inputs.updateMouse(x, y);
 }
 
 std::vector<unsigned int> &Application::getPrevKeyStates() {
-  return keys.getPrevStates();
+  return inputs.getPrevStates();
 }
 } // namespace LZ

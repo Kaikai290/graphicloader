@@ -9,26 +9,12 @@
 
 #include "application.h"
 #include "window.h"
+#include "event.h"
 
 #include "log.h"
 
 namespace LZ {
 
-static double lastX;
-static double lastY;
-
-static bool firstMove = true;
-
-void keyCallback(GLFWwindow *window, int key, int scancode, int action,
-                 int mods);
-
-void cursorPosCallback(GLFWwindow *window, double xpos, double ypos);
-
-void mouseButtonCallback(GLFWwindow *window, int button, int action, int mods);
-
-void scrollCallback(GLFWwindow *window, double xoffset, double yoffset);
-
-void windowSizeCallback(GLFWwindow *window, int width, int height);
 
 Window::Window() {}
 
@@ -53,7 +39,6 @@ void Window::init(const ApplicationSpec spec) {
   }
   glfwMakeContextCurrent(window);
 
-
   GLFW_REFRESH_RATE;
 
   glfwSetWindowUserPointer(window, this);
@@ -77,11 +62,10 @@ void Window::init(const ApplicationSpec spec) {
   if (!gladLoadGLLoader((GLADloadproc)glfwGetProcAddress))
     std::cout << "no" << std::endl;
 
-
   glfwSwapInterval(1);
+
   glEnable(GL_DEPTH_TEST);
-  //glEnable(GL_CULL_FACE);
-  // glPolygonMode( GL_FRONT_AND_BACK, GL_LINE );
+  glEnable(GL_CULL_FACE);
 
   IMGUI_CHECKVERSION();
   ImGui::CreateContext();
@@ -101,7 +85,8 @@ void Window::init(const ApplicationSpec spec) {
 void Window::shutdown() {
   ImGui_ImplOpenGL3_Shutdown();
   ImGui_ImplGlfw_Shutdown();
-  ImGui::DestroyContext(); // should check to see if imgui is init before shutting down?
+  ImGui::DestroyContext(); // should check to see if imgui is init before
+                           // shutting down?
 
   if (window) {
     Log::printInfo("Window Deleted");
@@ -111,10 +96,7 @@ void Window::shutdown() {
 
 void Window::pollEvents() { glfwPollEvents(); }
 
-void Window::update() {
-
-  glfwSwapBuffers(window);
-}
+void Window::update() { glfwSwapBuffers(window); }
 
 void Window::clear() { glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT); }
 
@@ -122,62 +104,4 @@ bool Window::shouldClose() { return !glfwWindowShouldClose(window); }
 
 const GLFWwindow *Window::getWindow() const { return window; }
 
-void errorCallback(int code, const char *description) {
-  std::cout << description << std::endl;
-}
-
-void keyCallback(GLFWwindow *window, int key, int scancode, int action,
-                 int mods) {
-  Application::getApplication().getKeys().updateState(key, action);
-}
-
-void cursorPosCallback(GLFWwindow *window, double xpos, double ypos) {
-  if (firstMove) {
-    lastX = xpos;
-    lastY = ypos;
-    firstMove = false;
-  }
-
-  double xoffset = xpos - lastX;
-  double yoffset = lastY - ypos;
-  lastX = xpos;
-  lastY = ypos;
-
-  float sensitivity = 0.1f;
-  xoffset *= sensitivity;
-  yoffset *= sensitivity;
-
-  LazyCamera &cam = Application::getApplication().getMainCamera();
-  float &yaw = cam.getYaw();
-  float &pitch = cam.getPitch();
-
-  yaw += xoffset;
-  pitch += yoffset;
-
-  if (pitch > 89.0f)
-    pitch = 89.0f;
-  if (pitch < -89.0f)
-    pitch = -89.0f;
-
-  glm::vec3 direction;
-  direction.x = cos(glm::radians(yaw)) * cos(glm::radians(pitch));
-  direction.y = sin(glm::radians(pitch));
-  direction.z = sin(glm::radians(yaw)) * cos(glm::radians(pitch));
-  cam.getFront() = glm::normalize(direction);
-
-  cam.update();
-}
-
-void mouseButtonCallback(GLFWwindow *window, int button, int action, int mods) {
-}
-
-void scrollCallback(GLFWwindow *window, double xoffset, double yoffset) {}
-
-void windowSizeCallback(GLFWwindow *window, int width, int height) {
-  glViewport(0, 0, width, height);
-  ScreenDim &screen = Application::getApplication().getDimensions();
-  screen.width = width;
-  screen.height = height;
-  Application::getApplication().getMainCamera().setDimension(width, height);
-}
 } // namespace LZ

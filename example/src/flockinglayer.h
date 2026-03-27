@@ -1,10 +1,9 @@
-#include <GLFW/glfw3.h>
-
 #include <iostream>
 
 #include <glm/glm.hpp>
 #include <glm/gtc/matrix_transform.hpp>
 #include <glm/gtc/type_ptr.hpp>
+#include <memory>
 
 #include "application.h"
 #include "camera.h"
@@ -14,7 +13,6 @@
 #include "glm/ext/vector_float4.hpp"
 #include "glm/gtc/random.hpp"
 
-#include "key.h"
 #include "layer.h"
 
 #include "renderer/shader_manager.h"
@@ -124,17 +122,17 @@ public:
 
     glUnmapBuffer(GL_ARRAY_BUFFER);
     glDepthFunc(GL_LEQUAL);
+    LZ::ScreenDim screen = LZ::Application::getApplication().getDimensions();
+    camera = std::make_shared<LZ::LazyCamera>(screen.width, screen.height);
+    glm::mat4 projection = glm::perspective(glm::radians(90.0f), camera->getAspectRatio(), 0.1f, 10000.0f);
+    camera->setProjection(projection);
   }
   ~FlockingLayer() {}
 
   void setup(std::shared_ptr<LZ::LazyCamera> mainCamera) override {
-    camera = mainCamera;
-    glm::mat4 projection = glm::perspective(glm::radians(90.0f), camera->getAspectRatio(), 0.1f, 10000.0f);
-    camera->setProjection(projection);
   }
 
   virtual void update(float deltaTime) override {
-    LZ::Log::printInfo(1/deltaTime);
 
     glClearColor(0.3f, 0.62f, 0.89f, 1.0f);
     processInput(deltaTime);
@@ -172,8 +170,15 @@ public:
   }
 
   void processInput(float deltaTime) {
-    auto &inputs = LZ::Application::getApplication().getKeyStates();
+    auto &inputs = LZ::Application::getApplication().getInputs();
     auto &keys = inputs.getStates(); 
+
+    if(inputs.ifMouseMove()) {
+      camera->turn(inputs.xOffset(), inputs.yOffset());
+      inputs.movedMouse();
+    }
+
+
     float moveSpeed = 50;
     static bool wireframe = false;
     for (unsigned int i = 0; i != 1024; i++) {

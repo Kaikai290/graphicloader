@@ -21,6 +21,8 @@ public:
   float& getYaw() ;
 
   glm::vec3& getFront();
+  
+  void turn(float xOffset, float yOffset);
 
   void move(float x, float y, float z);
 

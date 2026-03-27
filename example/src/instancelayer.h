@@ -104,7 +104,7 @@ public:
   }
 
 void processInput(float deltaTime) {
-    auto &inputs = LZ::Application::getApplication().getKeyStates();
+    auto &inputs = LZ::Application::getApplication().getInputs();
     auto &keys = inputs.getStates(); 
     for (unsigned int i = 0; i != 1024; i++) {
       switch (i) {

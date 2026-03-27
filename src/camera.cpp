@@ -1,4 +1,5 @@
 #include "camera.h"
+#include <iostream>
 namespace LZ {
 LazyCamera::LazyCamera(int width, int height)
   :screenWidth(width), screenHeight(height){
@@ -18,6 +19,17 @@ void LazyCamera::update() {
   cameraUp    = glm::normalize(glm::cross(cameraRight, cameraFront));
 
   view = glm::lookAt(cameraPos, cameraPos + cameraFront, cameraUp);
+}
+
+void LazyCamera::turn(float xOffset, float yOffset) {
+  yaw += (sensitivity * xOffset);
+  pitch += (sensitivity * yOffset);
+
+  if (pitch > 89.0f)
+    pitch = 89.0f;
+  if (pitch < -89.0f)
+    pitch = -89.0f;
+  update();
 }
 
 glm::mat4& LazyCamera::getProjection(){
